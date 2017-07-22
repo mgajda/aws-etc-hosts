@@ -17,43 +17,45 @@ def put_file(bucket, key_name, content):
                                replace=True)
 
 def main(options):
-    aws_api_key = options.aws_access_key
-    aws_secret_key = options.aws_secret_key
-    os.environ['AWS_ACCESS_KEY_ID'] = options.aws_access_key
-    os.environ['AWS_SECRET_ACCESS_KEY'] = options.aws_secret_key
+    #aws_api_key = options.aws_access_key
+    #aws_secret_key = options.aws_secret_key
+    #os.environ['AWS_ACCESS_KEY_ID'] = options.aws_access_key
+    #os.environ['AWS_SECRET_ACCESS_KEY'] = options.aws_secret_key
     #regions = ['us-west-1', 'us-west-2', 'us-east-1', 'eu-west-1', 'ap-southeast-1']
     regions = ['eu-west-1', 'ap-southeast-1']
 
     region_instances = {}
     for region in regions:
         conn = ec2.connect_to_region(region)
-        all_reservations = conn.get_all_instances(filters={ 'tag-key': 'dns' })
+        if not conn:
+            #print("The region:", region, "does not exist.")
+            continue
+        else:
+            #print(dir(conn))
+        all_reservations = conn.get_all_instances()
 
         instances = {}
         for reservation in all_reservations:
             for instance in reservation.instances:
-                if instance.state == "running" and 'dns' in instance.tags:
-                    for dns_name in instance.tags['dns'].strip().split(","):
-                        instances[dns_name] = instance
+                if instance.state == "running":
+                    instances[instance.public_dns_name]=instance
+                    if instance.tags.has_key('Name'):
+                        instances[instance.tags['Name']]=instance
+                    if instance.tags.has_key('dns'):
+                        for dns_name in instance.tags['dns'].strip().split(","):
+                            instances[dns_name] = instance
 
         region_instances[region] = instances
-
+    #print("region_instances:", region_instances)
     #Generate an etc host for each region, local instances using 10. and others using public
-    hosts_lines = [
-        '127.0.0.1 localhost',
-        '::1 ip6-localhost ip6-loopback',
-        'fe00::0 ip6-localnet',
-        'ff00::0 ip6-mcastprefix',
-        'ff02::1 ip6-allnodes',
-        'ff02::2 ip6-allrouters',
-        'ff02::3 ip6-allhosts'
-    ]
+    hosts_lines=[]
+    with open("/etc/hosts.default", "r") as inpf:
+        hosts_lines=inpf.read().split("\n")
 
     #Generate an etc hosts with all public ip addresses, for developers
-    hosts_lines = []
     for region in regions:
-        for dns_name,instance in region_instances[src_region].iteritems():
-            print("INSTANCE:", instance, dir(instance))
+        for dns_name,instance in region_instances[region].iteritems():
+            #print("INSTANCE:", instance, dir(instance))
             hosts_lines.append("%s %s %s.internal" % (instance.ip_address, dns_name, dns_name))
 
     # make sure we replace hosts file as atomically as possible.
