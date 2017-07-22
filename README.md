@@ -3,6 +3,8 @@
 AWS hosts get unpredictable names, and [Valentino Volonghi's](https://twitter.com/dialtone_) script got old,
 so I updated it to generate local `/etc/hosts` only.
 
+
+
 # Install
 
 ```bash
@@ -19,3 +21,7 @@ with `aws configure`.
 sudo cp etc_hosts /etc/hosts
 ```
 
+## License
+
+Original code was published by Valentino without license, maybe someone can find it on AdRoll.com website.
+As for my contribution - it is all public domain here.
