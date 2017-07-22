@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-# Modified from
+# This code was modified from:
 # http://tech.adroll.com/blog/ops/2013/09/30/dns-less-setup-in-aws.html
+# Modifications done by Michal were to make it generate _only_ /etc/hosts
 
 import os
 from optparse import OptionParser
