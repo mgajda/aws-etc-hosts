@@ -1,3 +1,8 @@
+# Generate `/etc/hosts` for AWS hosts
+
+AWS hosts get unpredictable names, and [Valentino Volonghi's](https://twitter.com/dialtone_) script got old,
+so I updated it to generate local `/etc/hosts` only.
+
 # Install
 
 ```bash
