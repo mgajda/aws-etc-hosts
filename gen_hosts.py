@@ -31,8 +31,8 @@ def main(options):
         if not conn:
             #print("The region:", region, "does not exist.")
             continue
-        else:
-            #print(dir(conn))
+        #else:
+        #   print(dir(conn))
         all_reservations = conn.get_all_instances()
 
         instances = {}
