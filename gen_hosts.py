@@ -62,6 +62,8 @@ def main(options):
     # make sure we replace hosts file as atomically as possible.
     with open("etc_hosts", "w") as outf:
         outf.write("\n".join(hosts_lines))
+        outf.write("\n")
+
 
 
 if __name__ == '__main__':
