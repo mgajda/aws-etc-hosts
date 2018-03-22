@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This code was modified from:
 # http://tech.adroll.com/blog/ops/2013/09/30/dns-less-setup-in-aws.html
 # Modifications done by Michal were to make it generate _only_ /etc/hosts
@@ -40,9 +40,10 @@ def main(options):
             for instance in reservation.instances:
                 if instance.state == "running":
                     instances[instance.public_dns_name]=instance
-                    if instance.tags.has_key('Name'):
+                    print("Tags:", instance.tags, dir(instance.tags))
+                    if 'Name' in instance.tags:
                         instances[instance.tags['Name']]=instance
-                    if instance.tags.has_key('dns'):
+                    if 'dns' in instance.tags:
                         for dns_name in instance.tags['dns'].strip().split(","):
                             instances[dns_name] = instance
 
@@ -55,7 +56,7 @@ def main(options):
 
     #Generate an etc hosts with all public ip addresses, for developers
     for region in regions:
-        for dns_name,instance in region_instances[region].iteritems():
+        for dns_name,instance in region_instances[region].items():
             #print("INSTANCE:", instance, dir(instance))
             hosts_lines.append("%s %s %s.internal" % (instance.ip_address, dns_name, dns_name))
 
