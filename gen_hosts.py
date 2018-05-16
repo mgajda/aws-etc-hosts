@@ -23,7 +23,7 @@ def main(options):
     #os.environ['AWS_ACCESS_KEY_ID'] = options.aws_access_key
     #os.environ['AWS_SECRET_ACCESS_KEY'] = options.aws_secret_key
     #regions = ['us-west-1', 'us-west-2', 'us-east-1', 'eu-west-1', 'ap-southeast-1']
-    regions = ['eu-west-1', 'ap-southeast-1']
+    regions = ['eu-west-1', 'ap-southeast-1', 'eu-central-1']
 
     region_instances = {}
     for region in regions:
@@ -57,6 +57,9 @@ def main(options):
     #Generate an etc hosts with all public ip addresses, for developers
     for region in regions:
         for dns_name,instance in region_instances[region].items():
+            if dns_name.strip()=="":
+                print("Problematic instance:", dns_name, instance)
+                continue
             #print("INSTANCE:", instance, dir(instance))
             hosts_lines.append("%s %s %s.internal" % (instance.ip_address, dns_name, dns_name))
 
