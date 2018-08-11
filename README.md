@@ -24,4 +24,4 @@ sudo cp etc_hosts /etc/hosts
 ## License
 
 Original code was published by Valentino without license, maybe someone can find it on AdRoll.com website.
-As for my contribution - it is all public domain here.
+As for my contribution - it is public domain here.
