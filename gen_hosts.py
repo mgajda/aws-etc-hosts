@@ -57,7 +57,8 @@ def main(options):
     #Generate an etc hosts with all public ip addresses, for developers
     for region in regions:
         for dns_name,instance in region_instances[region].items():
-            if dns_name.strip()=="":
+            normalized_name = dns_name.replace(" ", "").strip()
+            if normalized_name=="":
                 print("Problematic instance:", dns_name, instance)
                 continue
             #print("INSTANCE:", instance, dir(instance))
